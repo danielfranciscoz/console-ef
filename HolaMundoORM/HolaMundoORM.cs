@@ -46,7 +46,7 @@ namespace HolaMundoORM
             // List<TbPregunta> preguntas = baseDatos.TbPreguntas.ToList();
 
             //Order
-            List<TbPregunta> preguntas = baseDatos.TbPreguntas.Where(w=>w.Estado.Value).OrderBy(w => w.IdPregunta).ToList();
+            List<TbPregunta> preguntas = baseDatos.TbPreguntas.Where(w => w.Estado.Value).OrderBy(w => w.IdPregunta).ToList();
 
             foreach (var item in preguntas)
             {
@@ -166,6 +166,24 @@ namespace HolaMundoORM
             baseDatos.Entry(pregunta).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
             baseDatos.SaveChanges();
 
+        }
+
+        public void ActualizarPreguntasMasivo()
+        {
+            List<TbPregunta> preguntas = baseDatos.TbPreguntas.Where(w => w.Estado.Value && w.Puntaje == 30).ToList();
+            List<TbPregunta> preguntasEditar= new List<TbPregunta>();
+
+            foreach (var item in preguntas)
+            {
+                item.UsuarioGrabacion = 13;
+                item.UsuarioModificacion= 14;
+
+                preguntasEditar.Add(item);
+            }
+
+            baseDatos.UpdateRange(preguntasEditar);
+
+            baseDatos.SaveChanges();
         }
 
         public void EliminarPregunta()
