@@ -39,7 +39,6 @@ namespace HolaMundoORM
             }
 
         }
-
         public void ObtenerPreguntas()
         {
 
@@ -47,14 +46,12 @@ namespace HolaMundoORM
             // List<TbPregunta> preguntas = baseDatos.TbPreguntas.ToList();
 
             //Order
-            List<TbPregunta> preguntas = baseDatos.TbPreguntas.OrderBy(w => w.IdRubro).ToList();
+            List<TbPregunta> preguntas = baseDatos.TbPreguntas.Where(w=>w.Estado.Value).OrderBy(w => w.IdPregunta).ToList();
 
             foreach (var item in preguntas)
             {
                 ImprimirPregunta(item);
             }
-
-            //Insert
 
             //Update
 
@@ -63,9 +60,10 @@ namespace HolaMundoORM
             //Ejecucion de SP
 
         }
-
         public void InsertarPregunta()
         {
+
+            //Insert
 
             using (var transaccion = baseDatos.Database.BeginTransaction())
             {
@@ -116,7 +114,6 @@ namespace HolaMundoORM
             }
 
         }
-
         public void ObtenerPreguntas(int numero)
         {
 
@@ -129,14 +126,12 @@ namespace HolaMundoORM
             }
 
         }
-
         public void ObtenerUnRegistro(int puntaje)
         {
             TbPregunta pregunta = baseDatos.TbPreguntas.FirstOrDefault(w => w.Puntaje == puntaje);
 
             ImprimirPregunta(pregunta);
         }
-
         private void ImprimirPregunta(TbPregunta pregunta)
         {
 
@@ -146,18 +141,51 @@ namespace HolaMundoORM
             Console.Write(" Puntaje " + pregunta.Puntaje);
             Console.WriteLine();
         }
+        public void LeerProcedimiento()
+        {
 
-        public void LeerProcedimiento(){
-
-           List<TbPreguntaProcedimientoAlmacenado> p =  baseDatos.ObtenerPreguntasProcedimiento();
-            foreach(TbPreguntaProcedimientoAlmacenado pregunta in p ){
-            Console.Write("Id " + pregunta.Id_Pregunta);
-            Console.Write(" Rubro " + pregunta.Id_Rubro);
-            Console.Write(" Pregunta " + pregunta.Pregunta);
-            Console.Write(" Puntaje " + pregunta.Puntaje);
-            Console.WriteLine();
+            List<TbPreguntaProcedimientoAlmacenado> p = baseDatos.ObtenerPreguntasProcedimiento();
+            foreach (TbPreguntaProcedimientoAlmacenado pregunta in p)
+            {
+                Console.Write("Id " + pregunta.Id_Pregunta);
+                Console.Write(" Rubro " + pregunta.Id_Rubro);
+                Console.Write(" Pregunta " + pregunta.Pregunta);
+                Console.Write(" Puntaje " + pregunta.Puntaje);
+                Console.WriteLine();
 
             }
         }
+
+        public void ActualizarPregunta()
+        {
+            TbPregunta pregunta = baseDatos.TbPreguntas.Find(1);
+            pregunta.Pregunta = "Realizar diagnóstico, mantenimiento y reparación con embellecimiento de superficies de carrocería.";
+            pregunta.Puntaje = 30;
+            pregunta.IdRubro = 6;
+
+            baseDatos.Entry(pregunta).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+            baseDatos.SaveChanges();
+
+        }
+
+        public void EliminarPregunta()
+        {
+            TbPregunta pregunta = baseDatos.TbPreguntas.Find(59);
+            baseDatos.Remove(pregunta);
+
+            baseDatos.SaveChanges();
+
+        }
+
+        public void EliminarSinEliminar()
+        {
+            TbPregunta pregunta = baseDatos.TbPreguntas.Find(1);
+
+            pregunta.Estado = false;
+
+            baseDatos.Entry(pregunta).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+            baseDatos.SaveChanges();
+        }
+
     }
 }

@@ -12,7 +12,7 @@ namespace HolaMundoORM
         {
            HolaMundoORM holaMundoORM = new HolaMundoORM();
 
-           holaMundoORM.LeerProcedimiento();
+           holaMundoORM.ObtenerPreguntas();
         }
     }
 }
